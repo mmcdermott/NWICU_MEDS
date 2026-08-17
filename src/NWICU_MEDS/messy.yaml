@@ -58,7 +58,7 @@ data/nw_hosp/admissions:
 data/nw_hosp/diagnoses_icd:
   _table:
     join:
-      data/nw_hosp/admissions: {key: hadm_id, cols: [dischtime]}
+      data/nw_hosp/admissions: { key: hadm_id, cols: [dischtime] }
   diagnosis:
     code: 'f"DIAGNOSIS//ICD//{$icd_version ?? ''UNK''}//{$icd_code ?? ''UNK''}"'
     hadm_id: $hadm_id
@@ -99,7 +99,7 @@ data/nw_hosp/labevents:
 data/nw_hosp/patients:
   _table:
     join:
-      data/nw_hosp/admissions: {key: subject_id, cols: {deathtime: min}}
+      data/nw_hosp/admissions: { key: subject_id, cols: { deathtime: min } }
     cols:
       dod_final: $deathtime ?? $dod
       year_of_birth: ($anchor_year - $anchor_age)::str

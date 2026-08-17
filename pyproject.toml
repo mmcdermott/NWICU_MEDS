@@ -43,4 +43,3 @@ NWICU = "NWICU_MEDS:messy.yaml"
 [project.urls]
 Homepage = "https://github.com/rvandewater/NWICU_MEDS"
 Issues = "https://github.com/rvandewater/NWICU_MEDS/issues"
-
