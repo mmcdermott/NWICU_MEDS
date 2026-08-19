@@ -71,7 +71,7 @@ data/nw_hosp/diagnoses_icd:
         parent_codes: >-
           f"ICD{$icd_version}CM/{($icd_code[0:4] + '.' + $icd_code[4:]
           if len_chars($icd_code) > 4 else $icd_code)
-          if (f'{$icd_version}' == '9' and /^E/ in $icd_code)
+          if ($icd_version::str == '9' and /^E/ in $icd_code)
           else ($icd_code[0:3] + '.' + $icd_code[3:]
           if len_chars($icd_code) > 3 else $icd_code)}"
 
