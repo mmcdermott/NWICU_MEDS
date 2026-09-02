@@ -16,11 +16,21 @@ This pipeline extracts the NWICU dataset (from physionet, https://physionet.org/
 
 ## Usage:
 
+With download:
+
 ```bash
 pip install NWICU_MEDS
-export DATASET_DOWNLOAD_USERNAME=... DATASET_DOWNLOAD_PASSWORD=...
+export DATASET_DOWNLOAD_USERNAME=...
+export DATASET_DOWNLOAD_PASSWORD=...
 
-meds-extract-run spec=NWICU output_dir=$MEDS_COHORT_DIR
+meds-extract-run spec=NWICU output_dir=$OUTPUT_DIR
+```
+
+Without download (if you already have the dataset):
+
+```bash
+pip install NWICU_MEDS
+meds-extract-run spec=NWICU do_download=false input_dir=$PHYSIONET_INPUT_DIR output_dir=$OUTPUT_DIR
 ```
 
 ## Configuration
@@ -31,13 +41,13 @@ meds-extract-run spec=NWICU output_dir=$MEDS_COHORT_DIR
 
 Everything the old `pre_MEDS.py` did is now config:
 
-| Was | Now |
-| --- | --- |
+| Was                                                 | Now                                                                               |
+| --------------------------------------------------- | --------------------------------------------------------------------------------- |
 | `fix_static_data` — earliest death time per subject | `_table.join` with `cols: {deathtime: min}`, then `dod_final: $deathtime ?? $dod` |
-| DOB from `anchor_year - anchor_age` | `_table.cols`: `year_of_birth: ($anchor_year - $anchor_age)::str` |
-| `add_discharge_time_by_hadm_id` | `_table.join` on `hadm_id` for `dischtime` |
-| `add_icd_diagnosis_dot` | inlined into the diagnosis `parent_codes` expression |
-| Post-hoc `codes.parquet` rebuild | `_metadata` blocks against NWICU's own `d_labitems` / `d_items` |
+| DOB from `anchor_year - anchor_age`                 | `_table.cols`: `year_of_birth: ($anchor_year - $anchor_age)::str`                 |
+| `add_discharge_time_by_hadm_id`                     | `_table.join` on `hadm_id` for `dischtime`                                        |
+| `add_icd_diagnosis_dot`                             | inlined into the diagnosis `parent_codes` expression                              |
+| Post-hoc `codes.parquet` rebuild                    | `_metadata` blocks against NWICU's own `d_labitems` / `d_items`                   |
 
 ### Demographics
 
@@ -66,22 +76,9 @@ This replaces the Python rebuild that existed because the MIMIC-IV crosswalks ar
 itemids that never match NWICU's — a mismatch that now surfaces as a WARNING instead of silently
 matching zero rows.
 
-
 ## Citation
 
-If you find our work useful, please cite the resource through the github repository (or the bibtex entry below), and cite the original dataset through PhysioNet. The following is the recommended citation for this package:
-
-```bibtex
-@software{van_de_Water_NWICU_MEDS_ETL_2025,
-author = {van de Water, Robin Philippus},
-doi = {10.5281/zenodo.14892134},
-license = {MIT},
-month = feb,
-title = {{NWICU\_MEDS ETL}},
-url = {https://github.com/rvandewater/NWICU_MEDS},
-year = {2025}
-}
-```
+If you find our work useful, please cite the resource through the github repository (or the bibtex entry below), and cite the original dataset through PhysioNet.
 
 This is the original dataset citation from PhysioNet:
 
@@ -95,5 +92,34 @@ This is the original dataset citation from PhysioNet:
   note = {Version 0.1.0},
   doi = {10.13026/s84w-1829},
   url = {https://doi.org/10.13026/s84w-1829}
+}
+```
+
+The following is the recommended citation for this package:
+
+```bibtex
+@software{van_de_Water_NWICU_MEDS_ETL_2025,
+author = {van de Water, Robin Philippus},
+doi = {10.5281/zenodo.14892134},
+license = {MIT},
+month = feb,
+title = {{NWICU\_MEDS ETL}},
+url = {https://github.com/rvandewater/NWICU_MEDS},
+year = {2025}
+}
+```
+
+For citing MEDS in general:
+
+```bibtex
+@article{mcdermott2026meds,
+  title={MEDS—An Emerging Data Standard and Ecosystem for Health AI Research},
+  author={McDermott, Matthew BA and Steinberg, Ethan and Fries, Jason A and van de Water, Robin P and Pang, Chao and Rockenschaub, Patrick and Renc, Pawel and Oh, Jungwoo and Stankevi{\v{c}}i{\=u}t{\.e}, Kamil{\.e} and Xu, Justin and others},
+  journal={NEJM AI},
+  volume={3},
+  number={6},
+  pages={AIra2501253},
+  year={2026},
+  publisher={Massachusetts Medical Society}
 }
 ```
